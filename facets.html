@@ -1,0 +1,557 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Five qualitative views of Terminal-Bench solutions</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f4f1ea;
+      --card: #fffdf8;
+      --ink: #17231f;
+      --muted: #64736c;
+      --line: #d9d5ca;
+      --line-soft: #ebe7dd;
+      --teal: #0b8b70;
+      --teal-soft: #dff1ea;
+      --blue: #367db7;
+      --amber: #c78525;
+      --purple: #7657a6;
+      --coral: #c75d6b;
+      --shadow: 0 22px 60px rgba(28, 43, 36, .09);
+    }
+    html[data-theme="dark"] {
+      color-scheme: dark;
+      --paper: #071a16;
+      --card: #0d241e;
+      --ink: #e8f3ee;
+      --muted: #a5b8af;
+      --line: #29473e;
+      --line-soft: #1a372f;
+      --teal-soft: #123d32;
+      --shadow: 0 22px 60px rgba(0, 0, 0, .25);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    button, select { color: inherit; font: inherit; }
+    button { cursor: pointer; }
+    .site-header { position: sticky; z-index: 20; top: 0; border-bottom: 1px solid var(--line); background: color-mix(in srgb, var(--paper) 92%, transparent); backdrop-filter: blur(16px); }
+    .nav { display: flex; width: min(100% - 40px, 1320px); min-height: 64px; margin: auto; align-items: center; gap: 24px; }
+    .brand { margin-right: auto; color: var(--ink); font-size: 14px; font-weight: 800; text-decoration: none; }
+    .nav-links { display: flex; align-items: center; gap: 18px; }
+    .nav-links a { color: var(--muted); font-size: 11px; font-weight: 720; text-decoration: none; }
+    .nav-links a:hover { color: var(--teal); }
+    .focus-control { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 10px; }
+    select, .theme { height: 36px; border: 1px solid var(--line); border-radius: 9px; background: var(--card); }
+    select { max-width: 165px; padding: 0 30px 0 10px; }
+    .theme { width: 38px; }
+    .hero { padding: 86px 20px 82px; border-bottom: 1px solid var(--line); background: radial-gradient(circle at 18% 16%, color-mix(in srgb, var(--purple) 8%, transparent), transparent 29rem), radial-gradient(circle at 83% 8%, color-mix(in srgb, var(--teal) 12%, transparent), transparent 31rem); }
+    .hero-inner { width: min(100%, 980px); margin: auto; }
+    h1 { max-width: 900px; margin: 0 0 38px; font-family: Georgia, "Times New Roman", serif; font-size: clamp(46px, 6vw, 76px); line-height: .98; letter-spacing: -.055em; }
+    .post-copy { max-width: 830px; color: var(--ink); font-family: Georgia, "Times New Roman", serif; font-size: clamp(17px, 1.55vw, 20px); line-height: 1.7; }
+    .post-copy p { margin: 0 0 23px; }
+    .post-copy a { color: var(--teal); text-underline-offset: 3px; }
+    .facet-list, .takeaway-list { margin: 28px 0 30px; padding: 0; list-style: none; }
+    .facet-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; overflow: hidden; border: 1px solid var(--line); border-radius: 14px; background: var(--line); font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
+    .facet-list li { padding: 17px 19px; background: color-mix(in srgb, var(--card) 86%, transparent); color: var(--muted); font-size: 13px; line-height: 1.5; }
+    .facet-list strong { display: block; margin-bottom: 3px; color: var(--ink); font-size: 13px; }
+    .facet-list li:last-child { grid-column: 1 / -1; }
+    .takeaway-list { display: grid; gap: 11px; font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
+    .takeaway-list li { position: relative; padding-left: 21px; color: var(--ink); font-size: 14px; font-weight: 680; line-height: 1.45; }
+    .takeaway-list li::before { position: absolute; top: .64em; left: 0; width: 7px; height: 7px; border-radius: 50%; background: var(--teal); content: ""; }
+    .graph-section { padding: 70px 20px; scroll-margin-top: 58px; }
+    .graph-section:nth-child(even) { background: color-mix(in srgb, var(--card) 38%, transparent); }
+    .graph-card { width: min(100%, 1320px); margin: auto; overflow: hidden; border: 1px solid var(--line); border-radius: 20px; background: var(--card); box-shadow: var(--shadow); }
+    .graph-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 22px; padding: 27px 30px 20px; border-bottom: 1px solid var(--line); }
+    .graph-title { margin: 0; font-family: Georgia, "Times New Roman", serif; font-size: 31px; letter-spacing: -.025em; }
+    .graph-question { margin: 7px 0 0; color: var(--muted); font-size: 13px; line-height: 1.45; }
+    .controls { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 8px; }
+    .control-group { display: flex; padding: 3px; border: 1px solid var(--line); border-radius: 10px; background: var(--paper); }
+    .control-group button { padding: 7px 10px; border: 0; border-radius: 7px; background: transparent; color: var(--muted); font-size: 10px; font-weight: 760; }
+    .control-group button.active { background: var(--card); color: var(--ink); box-shadow: 0 1px 5px rgba(0, 0, 0, .08); }
+    .provider-legend { display: flex; flex-wrap: wrap; gap: 8px 16px; padding: 13px 30px 0; color: var(--muted); font-size: 9px; }
+    .provider-legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .provider-legend i { width: 8px; height: 8px; border-radius: 50%; }
+    .chart-frame { padding: 8px 24px 0; }
+    .chart-frame svg { display: block; width: 100%; height: auto; overflow: visible; }
+    svg text { fill: var(--muted); font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
+    svg .axis { stroke: var(--line); stroke-width: 1.2; }
+    svg .grid { stroke: var(--line-soft); stroke-width: 1; stroke-dasharray: 3 6; }
+    svg .tick { font-size: 10px; }
+    svg .axis-label { fill: var(--ink); font-size: 11px; font-weight: 720; }
+    svg .quadrant { fill: var(--muted); font-size: 10px; font-weight: 700; letter-spacing: .02em; }
+    svg .median { stroke: color-mix(in srgb, var(--muted) 45%, transparent); stroke-width: 1; stroke-dasharray: 6 7; }
+    svg .mark { cursor: pointer; stroke: var(--card); stroke-width: 3; transition: opacity .18s, r .18s; }
+    svg .mark:hover { stroke: var(--ink); stroke-width: 2; }
+    svg .leader { stroke: color-mix(in srgb, var(--muted) 45%, transparent); stroke-width: 1; }
+    svg .point-label { fill: var(--ink); font-size: 10px; font-weight: 760; }
+    svg .model-row { transition: opacity .18s; }
+    .dim { opacity: .13; }
+    .graph-note { padding: 13px 30px 17px; border-top: 1px solid var(--line); color: var(--muted); font-size: 9px; line-height: 1.55; }
+    .tooltip { position: fixed; z-index: 40; width: max-content; max-width: 290px; padding: 10px 12px; pointer-events: none; border: 1px solid var(--line); border-radius: 9px; background: var(--card); box-shadow: 0 12px 35px rgba(0, 0, 0, .16); color: var(--ink); font-size: 10px; line-height: 1.5; opacity: 0; transform: translate(10px, 10px); transition: opacity .12s; }
+    .tooltip.visible { opacity: 1; }
+    .tooltip strong { display: block; margin-bottom: 3px; font-size: 11px; }
+    body.capture { width: 1600px; min-height: 1000px; background: var(--paper); }
+    body.capture .site-header, body.capture .hero, body.capture .graph-section { display: none; }
+    body.capture .graph-section.capture-target { display: block; min-height: 1000px; padding: 34px 40px; background: var(--paper); }
+    body.capture .graph-card { width: 1520px; min-height: 932px; margin: 0; border-radius: 18px; box-shadow: none; }
+    body.capture .graph-head { padding: 26px 32px 19px; }
+    body.capture .chart-frame { padding: 6px 28px 0; }
+    body.capture .chart-frame svg { height: 690px; }
+    body.capture .provider-legend { padding-top: 11px; }
+    @media (max-width: 900px) {
+      .nav-links { display: none; }
+      .focus-control span { display: none; }
+      .graph-head { grid-template-columns: 1fr; }
+      .controls { justify-content: flex-start; }
+      .chart-frame { overflow-x: auto; }
+      .chart-frame svg { min-width: 900px; }
+    }
+    @media (max-width: 560px) {
+      .nav { width: min(100% - 20px, 1320px); gap: 8px; }
+      .focus-control { display: none; }
+      .hero { padding: 58px 18px 50px; }
+      .facet-list { grid-template-columns: 1fr; }
+      .facet-list li:last-child { grid-column: auto; }
+      .graph-section { padding: 35px 10px; }
+      .graph-head { padding: 21px 18px 17px; }
+      .graph-title { font-size: 27px; }
+      .provider-legend, .graph-note { padding-inline: 18px; }
+      .chart-frame { padding-inline: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="nav">
+      <a class="brand" href="#top">The Code They Leave Behind</a>
+      <nav class="nav-links" aria-label="Figures">
+        <a href="#reliability">Reliability</a>
+        <a href="#verbosity">Verbosity</a>
+        <a href="#complexity">Complexity</a>
+        <a href="#speciality">Speciality</a>
+        <a href="#writing">Writing</a>
+      </nav>
+      <label class="focus-control"><span>Highlight</span><select id="modelFocus"><option value="">All models</option></select></label>
+      <button class="theme" id="themeToggle" type="button" aria-label="Switch color theme">◐</button>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-inner">
+        <h1>The Code They Leave Behind</h1>
+        <article class="post-copy">
+          <p>I’ve been thinking a lot about what we’re actually trying to measure with coding benchmarks. Almost every major leaderboard evaluates models on a simple binary: did the model complete the task? That pass/fail metric hides the qualitative nuances of the solution. A single score doesn't tell you how the code was built, how fragile it is, or whether you would ever want to maintain it.</p>
+          <p>Opus 5 is a great example of this gap. On paper, it looks like a massive improvement: on Terminal Bench 4.0, Opus 4.8 scored 23.6%, while Opus 5 jumped to 51.8%, surpassing Fable 5. But once developers actually started using it, many called the model practically unusable.</p>
+          <p>We see this cycle constantly: a new model lands, benchmarks hit record highs, and real-world utility fails to match the headline.</p>
+          <p>One thing I think we are missing is subjective experience with a model. What happens after the task is solved? Does it produce clean, readable code, or does it dump a fragile, tangled mess into your codebase? Does it write clearly, or is reading its rationale a painful slog?</p>
+          <p>Because many benchmarks, including Terminal Bench, are open source, we don't have to treat model outputs as a black box. We can inspect the exact artifacts these models leave behind. While evaluating code quality involves subjective elements best judged by humans, static analysis and programmatic tooling already offer a far richer picture than a binary pass/fail score.</p>
+          <p>To move beyond single scores, I've settled on five programmatic views of model behavior:</p>
+          <ul class="facet-list">
+            <li><strong>Reliability</strong>How consistently does the model solve the same task?</li>
+            <li><strong>Verbosity</strong>How much code does it generate to achieve a working solution?</li>
+            <li><strong>Complexity</strong>How structurally expensive, deeply nested, or fragile is that code?</li>
+            <li><strong>Specialization</strong>Where does the model disproportionately excel or struggle across domains?</li>
+            <li><strong>Writing</strong>How clearly does it structure its code, comment its work, and explain its reasoning?</li>
+          </ul>
+          <p>Not every Terminal Bench task can be evaluated this way, but I’ve selected 27 that produce measurable code either greenfield solutions or tasks involving debugging and repair.</p>
+          <p>I’m by no means an expert in this domain, and others will likely find more insightful ways to analyze code quality, but I think it's a discussion worth starting. Feel free to critique or poke holes in what I've done here. I've made the code used to generate these graphs available in a Git repository <a href="https://github.com/stbenjam/qualitative-benchmarks">here</a>.</p>
+          <ul class="takeaway-list">
+            <li>Fable 5.1 is more reliable in solving the same task</li>
+            <li>Opus 5 creates the most cognitive and cyclomatically complex code</li>
+            <li>GPT models excel in Science; fall behind on hardware (CAD, RTL)</li>
+            <li>Opus 5 produces the heaviest prose, Grok 4.6 the lightest</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="graph-section" id="reliability" data-chart="reliability">
+      <figure class="graph-card">
+        <figcaption class="graph-head"><div><h2 class="graph-title">Reliability</h2><p class="graph-question">When a model solves a task, does it solve it consistently?</p></div></figcaption>
+        <div class="provider-legend"></div>
+        <div class="chart-frame" id="reliabilityChart"></div>
+        <div class="graph-note">Repeatability is the pass rate calculated only across tasks where that model recorded at least one success. Breadth counts those tasks once. Five attempts were run per model and task.</div>
+      </figure>
+    </section>
+
+    <section class="graph-section" id="verbosity" data-chart="verbosity">
+      <figure class="graph-card">
+        <figcaption class="graph-head"><div><h2 class="graph-title">Verbosity</h2><p class="graph-question">How much code does a successful solution cost?</p></div><div class="controls"><div class="control-group" id="verbosityMode"><button class="active" data-value="tokens" type="button">Lexical tokens</button><button data-value="loc" type="button">Lines</button><button data-value="bytes" type="button">Bytes</button></div></div></figcaption>
+        <div class="provider-legend"></div>
+        <div class="chart-frame" id="verbosityChart"></div>
+        <div class="graph-note">Economy inverts each task-relative volume index: the most compact model on a task scores 100, and larger solutions score proportionally lower. Model values average those economy scores over tasks solved. Higher and farther right is more compact; failures remain in the solve-rate axis.</div>
+      </figure>
+    </section>
+
+    <section class="graph-section" id="complexity" data-chart="complexity">
+      <figure class="graph-card">
+        <figcaption class="graph-head"><div><h2 class="graph-title">Complexity</h2><p class="graph-question">Does the model produce structurally expensive code?</p></div><div class="controls"><div class="control-group" id="complexityMode"><button class="active" data-value="cognitive" type="button">Cognitive</button><button data-value="cyclomatic" type="button">Cyclomatic</button></div></div></figcaption>
+        <div class="provider-legend"></div>
+        <div class="chart-frame" id="complexityChart"></div>
+        <div class="graph-note">Both axes are task-relative economy scores over the same complexity-supported rows: task-best compactness is 100 and higher is better. The dashed line is an ordinary least-squares fit across the plotted model means. Unsupported languages are omitted.</div>
+      </figure>
+    </section>
+
+    <section class="graph-section" id="speciality" data-chart="speciality">
+      <figure class="graph-card">
+        <figcaption class="graph-head"><div><h2 class="graph-title">Speciality</h2><p class="graph-question">Does the model specialize in specific Terminal-Bench categories?</p></div><div class="controls"><div class="control-group" id="specialityMode"><button class="active" data-value="lift" type="button">Adjusted lift</button><button data-value="raw" type="button">Raw pass rate</button></div></div></figcaption>
+        <div class="chart-frame" id="specialityChart"></div>
+        <div class="graph-note">Adjusted lift compares actual category performance with a simple expectation: model overall rate + cohort category rate − cohort overall rate. It is an exploratory normalization, not a significance test. Raw mode shows the underlying pass rates.</div>
+      </figure>
+    </section>
+
+    <section class="graph-section" id="writing" data-chart="writing">
+      <figure class="graph-card">
+        <figcaption class="graph-head"><div><h2 class="graph-title">Writing</h2><p class="graph-question">Does the model produce heavy prose, and is it easily understandable?</p></div><div class="controls"><div class="control-group" id="writingBurden"><button class="active" data-value="volume" type="button">Words / solution</button><button data-value="density" type="button">Words / 100 tokens</button></div><div class="control-group" id="writingEase"><button class="active" data-value="ari" type="button">ARI grade</button><button data-value="flesch" type="button">Flesch ease</button></div></div></figcaption>
+        <div class="provider-legend"></div>
+        <div class="chart-frame" id="writingChart"></div>
+        <div class="graph-note">Prose economy is 100 for the lightest model mean and falls proportionally as comment burden grows. Volume uses every successful artifact; density is total comment words per 100 final-side lexical code tokens. ARI and Flesch use artifacts with at least 100 prose words and five punctuated sentences; lower ARI and higher Flesch indicate easier prose, not better technical explanations.</div>
+      </figure>
+    </section>
+  </main>
+
+  <div class="tooltip" id="tooltip" role="tooltip"></div>
+
+  <script src="data.js"></script>
+  <script>
+    (() => {
+      "use strict";
+      const data = window.REPORT_DATA;
+      if (!data) return;
+
+      const W = 1200, H = 610;
+      const M = { top: 38, right: 68, bottom: 76, left: 92 };
+      const IW = W - M.left - M.right, IH = H - M.top - M.bottom;
+      const providers = [
+        ["Anthropic", "#0b8b70"],
+        ["OpenAI", "#367db7"],
+        ["Google", "#c78525"],
+        ["xAI", "#7657a6"],
+        ["Z.ai", "#c75d6b"]
+      ];
+      const colorMap = Object.fromEntries(providers);
+      const provider = model => /^(Opus|Fable|Sonnet)/.test(model.model_display) ? "Anthropic" : model.model_display.startsWith("GPT") ? "OpenAI" : model.model_display.startsWith("Gemini") ? "Google" : model.model_display.startsWith("Grok") ? "xAI" : "Z.ai";
+      const modelName = model => model.model_display;
+      const fmt = (value, digits = 1) => Number(value).toLocaleString(undefined, { maximumFractionDigits: digits, minimumFractionDigits: 0 });
+      const pct = value => `${fmt(value)}%`;
+      const avg = values => values.length ? values.reduce((sum, value) => sum + value, 0) / values.length : null;
+      const median = values => { const sorted = [...values].sort((a, b) => a - b); const i = Math.floor(sorted.length / 2); return sorted.length % 2 ? sorted[i] : (sorted[i - 1] + sorted[i]) / 2; };
+      const taskRow = (task, model) => task.rows.find(row => row.row_id === model.row_id);
+      const tip = value => encodeURIComponent(value);
+
+      const stats = data.models.map(model => {
+        const rows = data.tasks.map(task => taskRow(task, model));
+        const solved = rows.filter(row => row.successes > 0);
+        const trials = solved.flatMap(row => row.trials);
+        const readable = trials.filter(trial => trial.ari_grade != null);
+        const conditionalAttempts = solved.reduce((sum, row) => sum + row.attempts, 0);
+        return {
+          ...model,
+          rows,
+          solved,
+          trials,
+          provider: provider(model),
+          subsetRate: 100 * model.successes / model.attempts,
+          breadth: solved.length,
+          repeatability: 100 * model.successes / conditionalAttempts,
+          meanComments: avg(trials.map(trial => trial.comment_words)),
+          totalComments: trials.reduce((sum, trial) => sum + trial.comment_words, 0),
+          commentDensity: 100 * trials.reduce((sum, trial) => sum + trial.comment_words, 0) / trials.reduce((sum, trial) => sum + trial.code_tokens, 0),
+          ari: avg(readable.map(trial => trial.ari_grade)),
+          flesch: avg(readable.map(trial => trial.flesch_reading_ease)),
+          readable: readable.length
+        };
+      });
+
+      document.querySelectorAll(".provider-legend").forEach(legend => {
+        legend.innerHTML = providers.map(([name, color]) => `<span><i style="background:${color}"></i>${name}</span>`).join("");
+      });
+
+      const focus = document.querySelector("#modelFocus");
+      focus.innerHTML += [...stats].sort((a, b) => modelName(a).localeCompare(modelName(b))).map(model => `<option value="${model.row_id}">${modelName(model)}</option>`).join("");
+      const applyFocus = () => {
+        const selected = focus.value;
+        document.querySelectorAll("[data-model]").forEach(element => element.classList.toggle("dim", selected && element.dataset.model !== selected));
+      };
+      focus.addEventListener("change", applyFocus);
+
+      const tooltip = document.querySelector("#tooltip");
+      const bindInteractions = root => {
+        root.querySelectorAll("[data-tip]").forEach(element => {
+          element.addEventListener("pointerenter", event => {
+            tooltip.innerHTML = decodeURIComponent(element.dataset.tip);
+            tooltip.classList.add("visible");
+            moveTooltip(event);
+          });
+          element.addEventListener("pointermove", moveTooltip);
+          element.addEventListener("pointerleave", () => tooltip.classList.remove("visible"));
+          element.addEventListener("click", () => {
+            if (!element.dataset.model) return;
+            focus.value = focus.value === element.dataset.model ? "" : element.dataset.model;
+            applyFocus();
+          });
+        });
+        applyFocus();
+      };
+      function moveTooltip(event) {
+        const gap = 16;
+        const width = tooltip.offsetWidth || 250, height = tooltip.offsetHeight || 90;
+        tooltip.style.left = `${Math.min(event.clientX + gap, innerWidth - width - gap)}px`;
+        tooltip.style.top = `${Math.min(event.clientY + gap, innerHeight - height - gap)}px`;
+      }
+
+      function ticks(min, max, count = 5) {
+        return Array.from({ length: count }, (_, index) => min + index * (max - min) / (count - 1));
+      }
+      function domains(points, xOptions = {}, yOptions = {}) {
+        const xs = points.map(point => point.x), ys = points.map(point => point.y);
+        const extent = (values, options) => {
+          let min = options.min ?? Math.min(...values), max = options.max ?? Math.max(...values);
+          const pad = options.pad ?? (max - min || 1) * .1;
+          min = options.min ?? min - pad;
+          max = options.max ?? max + pad;
+          return [min, max];
+        };
+        return { x: extent(xs, xOptions), y: extent(ys, yOptions) };
+      }
+      function axes(xDomain, yDomain, options = {}) {
+        const sx = value => M.left + (value - xDomain[0]) / (xDomain[1] - xDomain[0]) * IW;
+        const sy = options.lowerYAtTop
+          ? value => M.top + (value - yDomain[0]) / (yDomain[1] - yDomain[0]) * IH
+          : value => M.top + IH - (value - yDomain[0]) / (yDomain[1] - yDomain[0]) * IH;
+        const xTicks = options.xTicks || ticks(...xDomain, 6);
+        const yTicks = options.yTicks || ticks(...yDomain, 6);
+        const xFormat = options.xFormat || (value => fmt(value));
+        const yFormat = options.yFormat || (value => fmt(value));
+        const grid = [
+          ...xTicks.map(value => `<line class="grid" x1="${sx(value)}" y1="${M.top}" x2="${sx(value)}" y2="${M.top + IH}"/><text class="tick" x="${sx(value)}" y="${H - 47}" text-anchor="middle">${xFormat(value)}</text>`),
+          ...yTicks.map(value => `<line class="grid" x1="${M.left}" y1="${sy(value)}" x2="${M.left + IW}" y2="${sy(value)}"/><text class="tick" x="${M.left - 12}" y="${sy(value) + 4}" text-anchor="end">${yFormat(value)}</text>`)
+        ].join("");
+        const labels = `<text class="axis-label" x="${M.left + IW / 2}" y="${H - 12}" text-anchor="middle">${options.xLabel}</text><text class="axis-label" transform="translate(19 ${M.top + IH / 2}) rotate(-90)" text-anchor="middle">${options.yLabel}</text>`;
+        return { sx, sy, markup: `${grid}<line class="axis" x1="${M.left}" y1="${M.top + IH}" x2="${M.left + IW}" y2="${M.top + IH}"/><line class="axis" x1="${M.left}" y1="${M.top}" x2="${M.left}" y2="${M.top + IH}"/>${labels}` };
+      }
+      function labelLayout(points) {
+        const labels = points.map((point, index) => {
+          const width = 7 + modelName(point.model).length * 6.1;
+          const leftSide = point.px > W - M.right - 145 || (point.px > M.left + IW * .48 && index % 2 === 0);
+          return { point, width, x: leftSide ? point.px - width - 13 : point.px + 13, y: point.py + (index % 2 ? 9 : -9), leftSide };
+        });
+        for (let pass = 0; pass < 200; pass++) {
+          for (let i = 0; i < labels.length; i++) {
+            labels[i].y += (labels[i].point.py - labels[i].y) * .018;
+            for (let j = i + 1; j < labels.length; j++) {
+              const a = labels[i], b = labels[j];
+              const xOverlap = a.x < b.x + b.width && a.x + a.width > b.x;
+              const yOverlap = Math.abs(a.y - b.y) < 17;
+              if (xOverlap && yOverlap) {
+                const direction = a.y <= b.y ? -1 : 1;
+                a.y += direction * 1.05;
+                b.y -= direction * 1.05;
+              }
+            }
+            labels[i].y = Math.max(M.top + 8, Math.min(M.top + IH - 5, labels[i].y));
+          }
+        }
+        return labels;
+      }
+      function scatter(points, options) {
+        const domain = domains(points, options.xDomain || {}, options.yDomain || {});
+        const axis = axes(domain.x, domain.y, options);
+        const plotted = points.map(point => ({ ...point, px: axis.sx(point.x), py: axis.sy(point.y) }));
+        const labels = labelLayout(plotted);
+        const extra = options.extra ? options.extra({ ...axis, xDomain: domain.x, yDomain: domain.y, plotted }) : "";
+        const leaders = labels.map(label => `<line class="leader label-group" data-model="${label.point.model.row_id}" x1="${label.point.px}" y1="${label.point.py}" x2="${label.leftSide ? label.x + label.width + 3 : label.x - 3}" y2="${label.y - 3}"/>`).join("");
+        const marks = plotted.map(point => `<circle class="mark" data-model="${point.model.row_id}" data-tip="${tip(point.tip)}" cx="${point.px}" cy="${point.py}" r="7.5" fill="${colorMap[point.model.provider]}"/>`).join("");
+        const texts = labels.map(label => `<text class="point-label label-group" data-model="${label.point.model.row_id}" x="${label.x}" y="${label.y}" data-tip="${tip(label.point.tip)}">${modelName(label.point.model)}</text>`).join("");
+        return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${options.ariaLabel}">${axis.markup}${extra}${leaders}${marks}${texts}</svg>`;
+      }
+      function regression(points) {
+        const mx = avg(points.map(point => point.x)), my = avg(points.map(point => point.y));
+        const slope = points.reduce((sum, point) => sum + (point.x - mx) * (point.y - my), 0) / points.reduce((sum, point) => sum + (point.x - mx) ** 2, 0);
+        return { slope, intercept: my - slope * mx };
+      }
+      function setMode(groupId, callback) {
+        document.querySelector(`#${groupId}`).addEventListener("click", event => {
+          const button = event.target.closest("button[data-value]");
+          if (!button) return;
+          document.querySelectorAll(`#${groupId} button`).forEach(item => item.classList.toggle("active", item === button));
+          callback(button.dataset.value);
+        });
+      }
+
+      function renderReliability() {
+        const points = stats.map(model => ({
+          model, x: model.breadth, y: model.repeatability,
+          tip: `<strong>${modelName(model)}</strong>${model.breadth}/27 tasks solved<br>${pct(model.repeatability)} repeatability on those tasks<br>${model.successes}/${model.attempts} successful attempts overall`
+        }));
+        const xMedian = median(points.map(point => point.x)), yMedian = median(points.map(point => point.y));
+        const chart = document.querySelector("#reliabilityChart");
+        chart.innerHTML = scatter(points, {
+          xDomain: { min: 0, max: 27 }, yDomain: { min: 0, max: 100 },
+          xTicks: [0, 5, 10, 15, 20, 25, 27], yTicks: [0, 20, 40, 60, 80, 100],
+          xLabel: "Task breadth — tasks solved at least once (of 27)", yLabel: "Repeatability on tasks solved at least once", yFormat: pct,
+          ariaLabel: "Task breadth versus conditional repeatability by model",
+          extra: ({ sx, sy }) => `<line class="median" x1="${sx(xMedian)}" y1="${M.top}" x2="${sx(xMedian)}" y2="${M.top + IH}"/><line class="median" x1="${M.left}" y1="${sy(yMedian)}" x2="${M.left + IW}" y2="${sy(yMedian)}"/><text class="quadrant" x="${M.left + IW - 7}" y="${M.top + 16}" text-anchor="end">BROADER + MORE REPEATABLE</text>`
+        });
+        bindInteractions(chart);
+      }
+
+      let verbosityMode = "tokens";
+      const verbosityMetrics = {
+        loc: ["mean_relative_loc_index", "Task-relative LOC index"],
+        tokens: ["mean_relative_code_tokens_index", "Task-relative lexical-token index"],
+        bytes: ["mean_relative_code_bytes_index", "Task-relative code-byte index"]
+      };
+      function renderVerbosity() {
+        const [field, label] = verbosityMetrics[verbosityMode];
+        const rowField = field.replace(/^mean_/, "");
+        const points = stats.map(model => {
+          const values = model.solved.map(row => row[rowField]).filter(value => value != null);
+          const economy = avg(values.map(value => 10000 / value));
+          return { model, x: economy, y: model.subsetRate, rawIndex: model[field], tip: `<strong>${modelName(model)}</strong>${fmt(economy)} ${label.replace("index", "economy")}<br>${label}: ${fmt(model[field])}<br>${pct(model.subsetRate)} measurable-subset solve rate` };
+        });
+        const chart = document.querySelector("#verbosityChart");
+        chart.innerHTML = scatter(points, {
+          xDomain: { min: 0, max: 100 }, yDomain: { min: 0, max: 75 },
+          xTicks: [0, 20, 40, 60, 80, 100], yTicks: [0, 15, 30, 45, 60, 75],
+          xLabel: `${label.replace("index", "economy")} — task-best compactness = 100`, yLabel: "Solve rate across 27 measurable source tasks", yFormat: pct,
+          ariaLabel: `${label.replace("index", "economy")} versus solve rate by model`,
+          extra: () => `<text class="quadrant" x="${M.left + IW - 7}" y="${M.top + 16}" text-anchor="end">MORE CAPABLE + MORE COMPACT</text>`
+        });
+        bindInteractions(chart);
+      }
+      setMode("verbosityMode", value => { verbosityMode = value; renderVerbosity(); });
+
+      let complexityMode = "cognitive";
+      function complexityStats() {
+        const yField = complexityMode === "cognitive" ? "relative_cognitive_complexity_index" : "relative_cyclomatic_complexity_index";
+        return stats.map(model => {
+          const rows = model.solved.filter(row => row[yField] != null && row.relative_code_tokens_index != null);
+          return {
+            model,
+            rows: rows.length,
+            x: avg(rows.map(row => 10000 / row.relative_code_tokens_index)),
+            y: avg(rows.map(row => 10000 / row[yField])),
+            rawX: avg(rows.map(row => row.relative_code_tokens_index)),
+            rawY: avg(rows.map(row => row[yField]))
+          };
+        }).filter(point => point.x != null && point.y != null);
+      }
+      function renderComplexity() {
+        const points = complexityStats();
+        const fit = regression(points);
+        points.forEach(point => {
+          point.residual = point.y - (fit.intercept + fit.slope * point.x);
+          point.tip = `<strong>${modelName(point.model)}</strong>${fmt(point.y)} ${complexityMode} structural economy<br>${fmt(point.x)} lexical-token economy<br>Raw indices: ${fmt(point.rawY)} complexity · ${fmt(point.rawX)} tokens<br>${point.residual >= 0 ? "+" : ""}${fmt(point.residual)} versus economy trend · ${point.rows} tasks`;
+        });
+        const xMin = 0, xMax = 100, yMin = 0, yMax = 100;
+        const chart = document.querySelector("#complexityChart");
+        chart.innerHTML = scatter(points, {
+          xDomain: { min: xMin, max: xMax }, yDomain: { min: yMin, max: yMax },
+          xTicks: ticks(xMin, xMax, 6), yTicks: ticks(yMin, yMax, 6),
+          xLabel: "Lexical-token economy — task-best compactness = 100", yLabel: `${complexityMode === "cognitive" ? "Cognitive" : "Cyclomatic"} structural economy — task-best = 100`,
+          ariaLabel: `Lexical-token economy versus ${complexityMode} structural economy by model`,
+          extra: ({ sx, sy }) => `<line x1="${sx(xMin)}" y1="${sy(fit.intercept + fit.slope * xMin)}" x2="${sx(xMax)}" y2="${sy(fit.intercept + fit.slope * xMax)}" stroke="var(--teal)" stroke-width="2" stroke-dasharray="7 6"/><text class="quadrant" x="${M.left + IW - 7}" y="${M.top + 16}" text-anchor="end">MORE COMPACT + LESS STRUCTURAL COST</text>`
+        });
+        bindInteractions(chart);
+      }
+      setMode("complexityMode", value => { complexityMode = value; renderComplexity(); });
+
+      let specialityMode = "lift";
+      function categoryData() {
+        const categories = [...new Set(data.tasks.map(task => task.tb_category))].sort();
+        const totalSuccesses = data.tasks.reduce((sum, task) => sum + task.successes, 0), totalAttempts = data.tasks.reduce((sum, task) => sum + task.attempts, 0);
+        const cohortRate = 100 * totalSuccesses / totalAttempts;
+        const categoryRates = Object.fromEntries(categories.map(category => {
+          const tasks = data.tasks.filter(task => task.tb_category === category);
+          return [category, 100 * tasks.reduce((sum, task) => sum + task.successes, 0) / tasks.reduce((sum, task) => sum + task.attempts, 0)];
+        }));
+        const rows = stats.map(model => {
+          const cells = categories.map(category => {
+            const tasks = data.tasks.filter(task => task.tb_category === category), modelRows = tasks.map(task => taskRow(task, model));
+            const actual = 100 * modelRows.reduce((sum, row) => sum + row.successes, 0) / modelRows.reduce((sum, row) => sum + row.attempts, 0);
+            const expected = Math.max(0, Math.min(100, model.subsetRate + categoryRates[category] - cohortRate));
+            return { category, actual, lift: actual - expected };
+          });
+          return { model, cells, signal: Math.max(...cells.map(cell => Math.abs(cell.lift))) };
+        });
+        rows.sort((a, b) => specialityMode === "lift" ? b.signal - a.signal : b.model.subsetRate - a.model.subsetRate);
+        return { categories, categoryRates, rows };
+      }
+      function renderSpeciality() {
+        const { categories, categoryRates, rows } = categoryData();
+        const width = 1200, height = 610, left = 190, top = 78, right = 32, bottom = 25;
+        const cellW = (width - left - right) / categories.length, rowH = (height - top - bottom) / rows.length;
+        const header = categories.map((category, index) => `<text class="axis-label" x="${left + cellW * (index + .5)}" y="31" text-anchor="middle">${category}</text><text class="tick" x="${left + cellW * (index + .5)}" y="49" text-anchor="middle">${pct(categoryRates[category])} cohort</text>`).join("");
+        const body = rows.map((row, rowIndex) => {
+          const y = top + rowIndex * rowH;
+          const label = `<text class="point-label" x="${left - 15}" y="${y + rowH / 2 + 4}" text-anchor="end">${modelName(row.model)}</text>`;
+          const cells = row.cells.map((cell, colIndex) => {
+            const value = specialityMode === "lift" ? cell.lift : cell.actual;
+            const alpha = specialityMode === "lift" ? .08 + Math.min(.67, Math.abs(value) / 40 * .67) : .06 + value / 100 * .7;
+            const base = specialityMode === "lift" && value < 0 ? "118,87,166" : "11,139,112";
+            const sign = value > 0 && specialityMode === "lift" ? "+" : "";
+            const x = left + colIndex * cellW;
+            const tooltipText = `<strong>${modelName(row.model)} · ${cell.category}</strong>${pct(cell.actual)} actual pass rate<br>${cell.lift >= 0 ? "+" : ""}${fmt(cell.lift)} pp adjusted lift`;
+            return `<g data-model="${row.model.row_id}" data-tip="${tip(tooltipText)}"><rect class="mark" x="${x + 3}" y="${y + 2}" width="${cellW - 6}" height="${rowH - 4}" rx="7" fill="rgba(${base},${alpha})"/><text class="point-label" x="${x + cellW / 2}" y="${y + rowH / 2 + 4}" text-anchor="middle">${sign}${fmt(value)}${specialityMode === "raw" ? "%" : ""}</text></g>`;
+          }).join("");
+          return `<g class="model-row" data-model="${row.model.row_id}">${label}${cells}</g>`;
+        }).join("");
+        const chart = document.querySelector("#specialityChart");
+        chart.innerHTML = `<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Category performance heatmap by model">${header}${body}</svg>`;
+        bindInteractions(chart);
+      }
+      setMode("specialityMode", value => { specialityMode = value; renderSpeciality(); });
+
+      let writingBurden = "volume", writingEase = "ari";
+      function renderWriting() {
+        const xField = writingBurden === "volume" ? "meanComments" : "commentDensity";
+        const yField = writingEase;
+        const xLabel = writingBurden === "volume" ? "Comment-volume economy — lightest model = 100" : "Comment-density economy — lightest model = 100";
+        const yLabel = writingEase === "ari" ? "ARI grade level — lower is easier" : "Flesch Reading Ease — higher is easier";
+        const eligible = stats.filter(model => model[yField] != null);
+        const lightest = Math.min(...eligible.map(model => model[xField]));
+        const points = eligible.map(model => ({
+          model, x: 100 * lightest / model[xField], y: model[yField], burden: model[xField],
+          tip: `<strong>${modelName(model)}</strong>${fmt(100 * lightest / model[xField])} prose-economy score<br>${fmt(model.meanComments)} mean comment words / solution<br>${fmt(model.commentDensity)} words / 100 lexical tokens<br>ARI ${fmt(model.ari)} · Flesch ${fmt(model.flesch)} · ${model.readable} readable samples`
+        }));
+        const rawYMin = Math.min(...points.map(point => point.y)), rawYMax = Math.max(...points.map(point => point.y));
+        const yPad = Math.max(2, (rawYMax - rawYMin) * .12);
+        const yMin = 5 * Math.floor((rawYMin - yPad) / 5), yMax = 5 * Math.ceil((rawYMax + yPad) / 5);
+        const chart = document.querySelector("#writingChart");
+        chart.innerHTML = scatter(points, {
+          xDomain: { min: 0, max: 100 }, yDomain: { min: yMin, max: yMax }, lowerYAtTop: writingEase === "ari",
+          xTicks: ticks(0, 100, 6), yTicks: ticks(yMin, yMax, 6),
+          xLabel, yLabel,
+          ariaLabel: "Comment burden versus prose readability by model",
+          extra: () => `<text class="quadrant" x="${M.left + IW - 7}" y="${M.top + 16}" text-anchor="end">LIGHTER + EASIER PROSE</text>`
+        });
+        bindInteractions(chart);
+      }
+      setMode("writingBurden", value => { writingBurden = value; renderWriting(); });
+      setMode("writingEase", value => { writingEase = value; renderWriting(); });
+
+      renderReliability();
+      renderVerbosity();
+      renderComplexity();
+      renderSpeciality();
+      renderWriting();
+
+      document.querySelector("#themeToggle").addEventListener("click", () => {
+        document.documentElement.dataset.theme = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+      });
+
+      const capture = new URLSearchParams(location.search).get("capture");
+      if (capture) {
+        document.body.classList.add("capture");
+        const target = document.querySelector(`[data-chart="${CSS.escape(capture)}"]`);
+        if (target) target.classList.add("capture-target");
+      }
+    })();
+  </script>
+</body>
+</html>

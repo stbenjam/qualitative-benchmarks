@@ -1,0 +1,12 @@
+[project]
+name = "qualitative-benchmarks"
+version = "0.1.0"
+description = "Qualitative static analysis of Terminal-Bench solution artifacts"
+requires-python = ">=3.12"
+dependencies = [
+  "httpx==0.28.1",
+  "pygments==2.19.2",
+]
+
+[tool.uv]
+package = false

@@ -28,7 +28,7 @@ jobs:
       - name: Prepare site
         run: |
           mkdir -p _site
-          cp facets-interactive.html _site/index.html
+          cp index.html _site/index.html
           touch _site/.nojekyll
 
       - name: Configure Pages
