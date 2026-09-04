@@ -47,12 +47,20 @@
     select, .theme { height: 36px; border: 1px solid var(--line); border-radius: 9px; background: var(--card); }
     select { max-width: 165px; padding: 0 30px 0 10px; }
     .theme { width: 38px; }
-    .hero { padding: 86px 20px 72px; border-bottom: 1px solid var(--line); background: radial-gradient(circle at 18% 30%, color-mix(in srgb, var(--purple) 8%, transparent), transparent 29rem), radial-gradient(circle at 83% 15%, color-mix(in srgb, var(--teal) 12%, transparent), transparent 31rem); }
-    .hero-inner { width: min(100%, 1120px); margin: auto; }
-    h1 { max-width: 900px; margin: 0; font-family: Georgia, "Times New Roman", serif; font-size: clamp(46px, 6vw, 82px); line-height: .98; letter-spacing: -.055em; }
-    .deck { max-width: 790px; margin: 28px 0 0; color: var(--muted); font-family: Georgia, "Times New Roman", serif; font-size: clamp(20px, 2.2vw, 29px); line-height: 1.45; }
-    .scope { display: flex; flex-wrap: wrap; gap: 10px 24px; margin-top: 34px; color: var(--muted); font-size: 11px; }
-    .scope strong { color: var(--ink); }
+    .hero { padding: 86px 20px 82px; border-bottom: 1px solid var(--line); background: radial-gradient(circle at 18% 16%, color-mix(in srgb, var(--purple) 8%, transparent), transparent 29rem), radial-gradient(circle at 83% 8%, color-mix(in srgb, var(--teal) 12%, transparent), transparent 31rem); }
+    .hero-inner { width: min(100%, 980px); margin: auto; }
+    h1 { max-width: 900px; margin: 0 0 38px; font-family: Georgia, "Times New Roman", serif; font-size: clamp(46px, 6vw, 76px); line-height: .98; letter-spacing: -.055em; }
+    .post-copy { max-width: 830px; color: var(--ink); font-family: Georgia, "Times New Roman", serif; font-size: clamp(17px, 1.55vw, 20px); line-height: 1.7; }
+    .post-copy p { margin: 0 0 23px; }
+    .post-copy a { color: var(--teal); text-underline-offset: 3px; }
+    .facet-list, .takeaway-list { margin: 28px 0 30px; padding: 0; list-style: none; }
+    .facet-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; overflow: hidden; border: 1px solid var(--line); border-radius: 14px; background: var(--line); font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
+    .facet-list li { padding: 17px 19px; background: color-mix(in srgb, var(--card) 86%, transparent); color: var(--muted); font-size: 13px; line-height: 1.5; }
+    .facet-list strong { display: block; margin-bottom: 3px; color: var(--ink); font-size: 13px; }
+    .facet-list li:last-child { grid-column: 1 / -1; }
+    .takeaway-list { display: grid; gap: 11px; font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
+    .takeaway-list li { position: relative; padding-left: 21px; color: var(--ink); font-size: 14px; font-weight: 680; line-height: 1.45; }
+    .takeaway-list li::before { position: absolute; top: .64em; left: 0; width: 7px; height: 7px; border-radius: 50%; background: var(--teal); content: ""; }
     .graph-section { padding: 70px 20px; scroll-margin-top: 58px; }
     .graph-section:nth-child(even) { background: color-mix(in srgb, var(--card) 38%, transparent); }
     .graph-card { width: min(100%, 1320px); margin: auto; overflow: hidden; border: 1px solid var(--line); border-radius: 20px; background: var(--card); box-shadow: var(--shadow); }
@@ -81,21 +89,18 @@
     svg .point-label { fill: var(--ink); font-size: 10px; font-weight: 760; }
     svg .model-row { transition: opacity .18s; }
     .dim { opacity: .13; }
-    .graph-insight { display: flex; min-height: 58px; padding: 14px 30px; align-items: center; border-top: 1px solid var(--line); background: color-mix(in srgb, var(--teal-soft) 42%, var(--card)); color: var(--ink); font-size: 11px; line-height: 1.5; }
     .graph-note { padding: 13px 30px 17px; border-top: 1px solid var(--line); color: var(--muted); font-size: 9px; line-height: 1.55; }
     .tooltip { position: fixed; z-index: 40; width: max-content; max-width: 290px; padding: 10px 12px; pointer-events: none; border: 1px solid var(--line); border-radius: 9px; background: var(--card); box-shadow: 0 12px 35px rgba(0, 0, 0, .16); color: var(--ink); font-size: 10px; line-height: 1.5; opacity: 0; transform: translate(10px, 10px); transition: opacity .12s; }
     .tooltip.visible { opacity: 1; }
     .tooltip strong { display: block; margin-bottom: 3px; font-size: 11px; }
-    footer { padding: 32px 20px 45px; color: var(--muted); text-align: center; font-size: 10px; }
     body.capture { width: 1600px; min-height: 1000px; background: var(--paper); }
-    body.capture .site-header, body.capture .hero, body.capture footer, body.capture .graph-section { display: none; }
+    body.capture .site-header, body.capture .hero, body.capture .graph-section { display: none; }
     body.capture .graph-section.capture-target { display: block; min-height: 1000px; padding: 34px 40px; background: var(--paper); }
     body.capture .graph-card { width: 1520px; min-height: 932px; margin: 0; border-radius: 18px; box-shadow: none; }
     body.capture .graph-head { padding: 26px 32px 19px; }
     body.capture .chart-frame { padding: 6px 28px 0; }
     body.capture .chart-frame svg { height: 690px; }
     body.capture .provider-legend { padding-top: 11px; }
-    body.capture .graph-insight { min-height: 54px; }
     @media (max-width: 900px) {
       .nav-links { display: none; }
       .focus-control span { display: none; }
@@ -108,10 +113,12 @@
       .nav { width: min(100% - 20px, 1320px); gap: 8px; }
       .focus-control { display: none; }
       .hero { padding: 58px 18px 50px; }
+      .facet-list { grid-template-columns: 1fr; }
+      .facet-list li:last-child { grid-column: auto; }
       .graph-section { padding: 35px 10px; }
       .graph-head { padding: 21px 18px 17px; }
       .graph-title { font-size: 27px; }
-      .provider-legend, .graph-insight, .graph-note { padding-inline: 18px; }
+      .provider-legend, .graph-note { padding-inline: 18px; }
       .chart-frame { padding-inline: 12px; }
     }
   </style>
@@ -135,9 +142,30 @@
   <main id="top">
     <section class="hero">
       <div class="hero-inner">
-        <h1>Five views of model behavior</h1>
-        <p class="deck">Correctness is the beginning of the evaluation. These figures examine what successful solutions cost, how consistently models reproduce them, and what kind of code they leave behind.</p>
-        <div class="scope"><span><strong id="modelCount"></strong> artifact-bearing configurations</span><span><strong id="trialCount"></strong> source-task attempts</span><span><strong id="successCount"></strong> successful artifacts</span><span>GPT-6 Astra awaits exported workspaces</span></div>
+        <h1>The Code They Leave Behind</h1>
+        <article class="post-copy">
+          <p>I’ve been thinking a lot about what we’re actually trying to measure with coding benchmarks. Almost every major leaderboard evaluates models on a simple binary: did the model complete the task? That pass/fail metric hides the qualitative nuances of the solution. A single score doesn't tell you how the code was built, how fragile it is, or whether you would ever want to maintain it.</p>
+          <p>Opus 5 is a great example of this gap. On paper, it looks like a massive improvement: on Terminal Bench 4.0, Opus 4.8 scored 23.6%, while Opus 5 jumped to 51.8%, surpassing Fable 5. But once developers actually started using it, many called the model practically unusable.</p>
+          <p>We see this cycle constantly: a new model lands, benchmarks hit record highs, and real-world utility fails to match the headline.</p>
+          <p>One thing I think we are missing is subjective experience with a model. What happens after the task is solved? Does it produce clean, readable code, or does it dump a fragile, tangled mess into your codebase? Does it write clearly, or is reading its rationale a painful slog?</p>
+          <p>Because many benchmarks, including Terminal Bench, are open source, we don't have to treat model outputs as a black box. We can inspect the exact artifacts these models leave behind. While evaluating code quality involves subjective elements best judged by humans, static analysis and programmatic tooling already offer a far richer picture than a binary pass/fail score.</p>
+          <p>To move beyond single scores, I've settled on five programmatic views of model behavior:</p>
+          <ul class="facet-list">
+            <li><strong>Reliability</strong>How consistently does the model solve the same task?</li>
+            <li><strong>Verbosity</strong>How much code does it generate to achieve a working solution?</li>
+            <li><strong>Complexity</strong>How structurally expensive, deeply nested, or fragile is that code?</li>
+            <li><strong>Specialization</strong>Where does the model disproportionately excel or struggle across domains?</li>
+            <li><strong>Writing</strong>How clearly does it structure its code, comment its work, and explain its reasoning?</li>
+          </ul>
+          <p>Not every Terminal Bench task can be evaluated this way, but I’ve selected 27 that produce measurable code either greenfield solutions or tasks involving debugging and repair.</p>
+          <p>I’m by no means an expert in this domain, and others will likely find more insightful ways to analyze code quality, but I think it's a discussion worth starting. Feel free to critique or poke holes in what I've done here. I've made the code used to generate these graphs available in a Git repository <a href="https://github.com/stbenjam/qualitative-benchmarks">here</a>.</p>
+          <ul class="takeaway-list">
+            <li>Fable 5.1 is more reliable in solving the same task</li>
+            <li>Opus 5 creates the most cognitive and cyclomatically complex code</li>
+            <li>GPT models excel in Science; fall behind on hardware (CAD, RTL)</li>
+            <li>Opus 5 produces the heaviest prose, Grok 4.6 the lightest</li>
+          </ul>
+        </article>
       </div>
     </section>
 
@@ -146,7 +174,6 @@
         <figcaption class="graph-head"><div><h2 class="graph-title">Reliability</h2><p class="graph-question">When a model solves a task, does it solve it consistently?</p></div></figcaption>
         <div class="provider-legend"></div>
         <div class="chart-frame" id="reliabilityChart"></div>
-        <div class="graph-insight" id="reliabilityInsight"></div>
         <div class="graph-note">Repeatability is the pass rate calculated only across tasks where that model recorded at least one success. Breadth counts those tasks once. Five attempts were run per model and task.</div>
       </figure>
     </section>
@@ -156,7 +183,6 @@
         <figcaption class="graph-head"><div><h2 class="graph-title">Verbosity</h2><p class="graph-question">How much code does a successful solution cost?</p></div><div class="controls"><div class="control-group" id="verbosityMode"><button class="active" data-value="tokens" type="button">Lexical tokens</button><button data-value="loc" type="button">Lines</button><button data-value="bytes" type="button">Bytes</button></div></div></figcaption>
         <div class="provider-legend"></div>
         <div class="chart-frame" id="verbosityChart"></div>
-        <div class="graph-insight" id="verbosityInsight"></div>
         <div class="graph-note">Economy inverts each task-relative volume index: the most compact model on a task scores 100, and larger solutions score proportionally lower. Model values average those economy scores over tasks solved. Higher and farther right is more compact; failures remain in the solve-rate axis.</div>
       </figure>
     </section>
@@ -166,8 +192,7 @@
         <figcaption class="graph-head"><div><h2 class="graph-title">Complexity</h2><p class="graph-question">Does the model produce structurally expensive code?</p></div><div class="controls"><div class="control-group" id="complexityMode"><button class="active" data-value="cognitive" type="button">Cognitive</button><button data-value="cyclomatic" type="button">Cyclomatic</button></div></div></figcaption>
         <div class="provider-legend"></div>
         <div class="chart-frame" id="complexityChart"></div>
-        <div class="graph-insight" id="complexityInsight"></div>
-        <div class="graph-note">Both axes are task-relative economy scores over the same complexity-supported rows: task-best compactness is 100 and higher is better. The dashed regression line estimates structural economy from lexical-token economy; vertical distance shows models that are structurally simpler or costlier than their measured size predicts. Unsupported languages are omitted.</div>
+        <div class="graph-note">Both axes are task-relative economy scores over the same complexity-supported rows: task-best compactness is 100 and higher is better. The dashed line is an ordinary least-squares fit across the plotted model means. Unsupported languages are omitted.</div>
       </figure>
     </section>
 
@@ -175,7 +200,6 @@
       <figure class="graph-card">
         <figcaption class="graph-head"><div><h2 class="graph-title">Speciality</h2><p class="graph-question">Does the model specialize in specific Terminal-Bench categories?</p></div><div class="controls"><div class="control-group" id="specialityMode"><button class="active" data-value="lift" type="button">Adjusted lift</button><button data-value="raw" type="button">Raw pass rate</button></div></div></figcaption>
         <div class="chart-frame" id="specialityChart"></div>
-        <div class="graph-insight" id="specialityInsight"></div>
         <div class="graph-note">Adjusted lift compares actual category performance with a simple expectation: model overall rate + cohort category rate − cohort overall rate. It is an exploratory normalization, not a significance test. Raw mode shows the underlying pass rates.</div>
       </figure>
     </section>
@@ -185,13 +209,11 @@
         <figcaption class="graph-head"><div><h2 class="graph-title">Writing</h2><p class="graph-question">Does the model produce heavy prose, and is it easily understandable?</p></div><div class="controls"><div class="control-group" id="writingBurden"><button class="active" data-value="volume" type="button">Words / solution</button><button data-value="density" type="button">Words / 100 tokens</button></div><div class="control-group" id="writingEase"><button class="active" data-value="ari" type="button">ARI grade</button><button data-value="flesch" type="button">Flesch ease</button></div></div></figcaption>
         <div class="provider-legend"></div>
         <div class="chart-frame" id="writingChart"></div>
-        <div class="graph-insight" id="writingInsight"></div>
         <div class="graph-note">Prose economy is 100 for the lightest model mean and falls proportionally as comment burden grows. Volume uses every successful artifact; density is total comment words per 100 final-side lexical code tokens. ARI and Flesch use artifacts with at least 100 prose words and five punctuated sentences; lower ARI and higher Flesch indicate easier prose, not better technical explanations.</div>
       </figure>
     </section>
   </main>
 
-  <footer>Terminal-Bench 4.0 · 27 measurable source tasks · successful artifacts only for static metrics</footer>
   <div class="tooltip" id="tooltip" role="tooltip"></div>
 
   <script>
@@ -32425,9 +32447,6 @@ window.REPORT_DATA = {
         };
       });
 
-      document.querySelector("#modelCount").textContent = fmt(data.summary.model_count, 0);
-      document.querySelector("#trialCount").textContent = fmt(data.summary.attempts, 0);
-      document.querySelector("#successCount").textContent = fmt(data.summary.successes, 0);
       document.querySelectorAll(".provider-legend").forEach(legend => {
         legend.innerHTML = providers.map(([name, color]) => `<span><i style="background:${color}"></i>${name}</span>`).join("");
       });
@@ -32558,8 +32577,6 @@ window.REPORT_DATA = {
           ariaLabel: "Task breadth versus conditional repeatability by model",
           extra: ({ sx, sy }) => `<line class="median" x1="${sx(xMedian)}" y1="${M.top}" x2="${sx(xMedian)}" y2="${M.top + IH}"/><line class="median" x1="${M.left}" y1="${sy(yMedian)}" x2="${M.left + IW}" y2="${sy(yMedian)}"/><text class="quadrant" x="${M.left + IW - 7}" y="${M.top + 16}" text-anchor="end">BROADER + MORE REPEATABLE</text>`
         });
-        const leader = [...stats].sort((a, b) => b.breadth - a.breadth || b.repeatability - a.repeatability)[0];
-        document.querySelector("#reliabilityInsight").innerHTML = `<strong>${modelName(leader)}</strong>&nbsp;has the widest measurable coverage at ${leader.breadth}/27 tasks and repeats successfully on ${pct(leader.repeatability)} of attempts within that solved set.`;
         bindInteractions(chart);
       }
 
@@ -32585,9 +32602,6 @@ window.REPORT_DATA = {
           ariaLabel: `${label.replace("index", "economy")} versus solve rate by model`,
           extra: () => `<text class="quadrant" x="${M.left + IW - 7}" y="${M.top + 16}" text-anchor="end">MORE CAPABLE + MORE COMPACT</text>`
         });
-        const leanest = [...points].sort((a, b) => b.x - a.x)[0];
-        const heaviest = [...points].sort((a, b) => a.x - b.x)[0];
-        document.querySelector("#verbosityInsight").innerHTML = `<strong>${modelName(leanest.model)}</strong>&nbsp;has the highest ${label.replace("Task-relative ", "").replace("index", "economy").toLowerCase()} score (${fmt(leanest.x)}); <strong style="margin-left:4px">${modelName(heaviest.model)}</strong>&nbsp;has the lowest (${fmt(heaviest.x)}) across its solved task mix.`;
         bindInteractions(chart);
       }
       setMode("verbosityMode", value => { verbosityMode = value; renderVerbosity(); });
@@ -32623,8 +32637,6 @@ window.REPORT_DATA = {
           ariaLabel: `Lexical-token economy versus ${complexityMode} structural economy by model`,
           extra: ({ sx, sy }) => `<line x1="${sx(xMin)}" y1="${sy(fit.intercept + fit.slope * xMin)}" x2="${sx(xMax)}" y2="${sy(fit.intercept + fit.slope * xMax)}" stroke="var(--teal)" stroke-width="2" stroke-dasharray="7 6"/><text class="quadrant" x="${M.left + IW - 7}" y="${M.top + 16}" text-anchor="end">MORE COMPACT + LESS STRUCTURAL COST</text>`
         });
-        const above = [...points].sort((a, b) => b.residual - a.residual)[0], below = [...points].sort((a, b) => a.residual - b.residual)[0];
-        document.querySelector("#complexityInsight").innerHTML = `<strong>${modelName(above.model)}</strong>&nbsp;delivers the most structural economy above its token-economy trend; <strong style="margin-left:4px">${modelName(below.model)}</strong>&nbsp;falls furthest below it for ${complexityMode} complexity.`;
         bindInteractions(chart);
       }
       setMode("complexityMode", value => { complexityMode = value; renderComplexity(); });
@@ -32671,11 +32683,6 @@ window.REPORT_DATA = {
         }).join("");
         const chart = document.querySelector("#specialityChart");
         chart.innerHTML = `<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Category performance heatmap by model">${header}${body}</svg>`;
-        const allCells = rows.flatMap(row => row.cells.map(cell => ({ model: row.model, ...cell })));
-        const high = [...allCells].sort((a, b) => b.lift - a.lift)[0], low = [...allCells].sort((a, b) => a.lift - b.lift)[0];
-        document.querySelector("#specialityInsight").innerHTML = specialityMode === "lift"
-          ? `<strong>${modelName(high.model)}</strong>&nbsp;shows the largest positive specialization signal in ${high.category} (+${fmt(high.lift)} pp); <strong style="margin-left:4px">${modelName(low.model)}</strong>&nbsp;shows the largest negative signal in ${low.category} (${fmt(low.lift)} pp).`
-          : `Cells show the unadjusted pass rate for each model and category; the smaller header value is the category-wide cohort rate.`;
         bindInteractions(chart);
       }
       setMode("specialityMode", value => { specialityMode = value; renderSpeciality(); });
@@ -32684,7 +32691,6 @@ window.REPORT_DATA = {
       function renderWriting() {
         const xField = writingBurden === "volume" ? "meanComments" : "commentDensity";
         const yField = writingEase;
-        const burdenLabel = writingBurden === "volume" ? "mean comment words per successful solution" : "comment words per 100 lexical code tokens";
         const xLabel = writingBurden === "volume" ? "Comment-volume economy — lightest model = 100" : "Comment-density economy — lightest model = 100";
         const yLabel = writingEase === "ari" ? "ARI grade level — lower is easier" : "Flesch Reading Ease — higher is easier";
         const eligible = stats.filter(model => model[yField] != null);
@@ -32704,9 +32710,6 @@ window.REPORT_DATA = {
           ariaLabel: "Comment burden versus prose readability by model",
           extra: () => `<text class="quadrant" x="${M.left + IW - 7}" y="${M.top + 16}" text-anchor="end">LIGHTER + EASIER PROSE</text>`
         });
-        const heaviest = [...eligible].sort((a, b) => b[xField] - a[xField])[0];
-        const easiest = [...eligible].sort((a, b) => writingEase === "ari" ? a[yField] - b[yField] : b[yField] - a[yField])[0];
-        document.querySelector("#writingInsight").innerHTML = `<strong>${modelName(heaviest)}</strong>&nbsp;has the heaviest ${burdenLabel}; <strong style="margin-left:4px">${modelName(easiest)}</strong>&nbsp;scores as the easiest prose by ${writingEase === "ari" ? "ARI" : "Flesch"}.`;
         bindInteractions(chart);
       }
       setMode("writingBurden", value => { writingBurden = value; renderWriting(); });
