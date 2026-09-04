@@ -38,7 +38,10 @@
     button { color: inherit; font: inherit; }
     button { cursor: pointer; }
     .site-header { position: sticky; z-index: 20; top: 0; border-bottom: 1px solid var(--line); background: color-mix(in srgb, var(--paper) 92%, transparent); backdrop-filter: blur(16px); }
-    .nav { display: flex; width: min(100% - 40px, 1320px); min-height: 64px; margin: auto; align-items: center; gap: 24px; }
+    .nav { display: flex; width: min(100% - 40px, 1320px); min-height: 64px; margin: auto; align-items: center; gap: 14px; }
+    .home-link { display: inline-flex; width: 36px; height: 36px; flex: 0 0 auto; align-items: center; justify-content: center; border: 1px solid var(--line); border-radius: 9px; background: var(--card); color: var(--muted); }
+    .home-link:hover { color: var(--teal); }
+    .home-link svg { width: 16px; height: 16px; }
     .brand { margin-right: auto; color: var(--ink); font-size: 14px; font-weight: 800; text-decoration: none; }
     .nav-links { display: flex; align-items: center; gap: 18px; }
     .nav-links a { color: var(--muted); font-size: 11px; font-weight: 720; text-decoration: none; }
@@ -49,6 +52,8 @@
     .hero-inner { width: min(100%, 980px); margin: auto; }
     h1 { max-width: 900px; margin: 0 0 15px; font-family: Georgia, "Times New Roman", serif; font-size: clamp(46px, 6vw, 76px); line-height: .98; letter-spacing: -.055em; }
     .post-meta { margin: 0 0 32px; color: var(--muted); font-size: 12px; font-weight: 680; letter-spacing: .025em; }
+    .post-meta a { color: inherit; text-decoration: none; }
+    .post-meta a:hover { color: var(--teal); text-decoration: underline; text-underline-offset: 3px; }
     .post-copy { max-width: 830px; color: var(--ink); font-family: Georgia, "Times New Roman", serif; font-size: clamp(17px, 1.55vw, 20px); line-height: 1.52; }
     .post-copy p { margin: 0 0 18px; }
     .post-copy a { color: var(--teal); text-underline-offset: 3px; }
@@ -137,6 +142,9 @@
 <body>
   <header class="site-header">
     <div class="nav">
+      <a class="home-link" href="https://bitbin.de/" aria-label="Back to Stephen Benjamin's blog">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5M5.5 10v10h13V10M9.5 20v-6h5v6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
       <a class="brand" href="#top">The Code They Leave Behind</a>
       <nav class="nav-links" aria-label="Figures">
         <a href="#reliability">Reliability</a>
@@ -153,7 +161,7 @@
     <section class="hero">
       <div class="hero-inner">
         <h1>The Code They Leave Behind</h1>
-        <p class="post-meta">Stephen Benjamin · September 4, 2026</p>
+        <p class="post-meta"><a href="https://x.com/stbenjam">Stephen Benjamin</a> · September 4, 2026</p>
         <article class="post-copy">
           <p>I’ve been thinking a lot about what we’re actually trying to measure with coding benchmarks. Almost every major leaderboard evaluates models on a simple binary: did the model complete the task? That pass/fail metric hides the qualitative properties of the solution. A single score doesn't tell you how the code was built, how fragile it is, or whether you would ever want to maintain it.</p>
           <p>Opus 5 is a great example of this gap. On paper, it looks like a massive improvement: on Terminal Bench 4.0, Opus 4.8 scored 23.6%, while Opus 5 jumped to 51.8%, surpassing Fable 5. But once developers actually started using it, many called the model practically unusable.</p>
