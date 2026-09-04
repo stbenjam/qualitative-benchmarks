@@ -114,7 +114,7 @@ TS_JS = frozenset({".ts", ".tsx", ".js", ".jsx"})
 
 
 # Every included task has an explicit, artifact-backed source deliverable. The
-# remaining 34 Terminal-Bench 4.0 tasks either deliver data/binaries/live state,
+# remaining 34 Terminal Bench 4.0 tasks either deliver data/binaries/live state,
 # or need patch reconstruction/an external baseline before churn is comparable.
 SOURCE_TASKS = (
     TaskSpec(
@@ -614,9 +614,9 @@ SOURCE_SLUGS = frozenset(spec.slug for spec in SOURCE_TASKS)
 if len(SOURCE_SLUGS) != len(SOURCE_TASKS):
     raise RuntimeError("The source task manifest contains duplicate slugs")
 if SOURCE_SLUGS & (DEFERRED_REPAIR_TASKS | NON_SOURCE_TASKS):
-    raise RuntimeError("Terminal-Bench task partitions overlap")
+    raise RuntimeError("Terminal Bench task partitions overlap")
 if len(SOURCE_SLUGS | DEFERRED_REPAIR_TASKS | NON_SOURCE_TASKS) != 66:
-    raise RuntimeError("Terminal-Bench task partitions must cover all 66 tasks")
+    raise RuntimeError("Terminal Bench task partitions must cover all 66 tasks")
 
 
 @dataclass
@@ -834,11 +834,11 @@ def _task_taxonomy(dataset_dir: Path, spec: TaskSpec) -> dict[str, Any]:
     subcategory = metadata.get("subcategory")
     tags = metadata.get("tags") or []
     if not isinstance(category, str) or not category:
-        raise RuntimeError(f"Missing Terminal-Bench category in {task_path}")
+        raise RuntimeError(f"Missing Terminal Bench category in {task_path}")
     if not isinstance(subcategory, str) or not subcategory:
-        raise RuntimeError(f"Missing Terminal-Bench subcategory in {task_path}")
+        raise RuntimeError(f"Missing Terminal Bench subcategory in {task_path}")
     if not isinstance(tags, list) or not all(isinstance(tag, str) for tag in tags):
-        raise RuntimeError(f"Invalid Terminal-Bench tags in {task_path}")
+        raise RuntimeError(f"Invalid Terminal Bench tags in {task_path}")
     return {
         "tb_category": category,
         "tb_subcategory": subcategory,
@@ -1703,7 +1703,7 @@ def build_report(work_dir: Path, complexity_binary: Path) -> dict[str, Any]:
             f"{HUB_URL}/datasets/{DATASET}/{DATASET_VERSION}"
             f"?leaderboard={LEADERBOARD}&tab=leaderboard"
         ),
-        "dataset": "Terminal-Bench 4.0",
+        "dataset": "Terminal Bench 4.0",
         "methodology": {
             "success": "Only associated trials whose live reward is exactly 1.",
             "greenfield": "Final scoped source artifact.",
@@ -1788,7 +1788,7 @@ def _write_report(report: dict[str, Any], output_dir: Path) -> None:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Extract and analyze Terminal-Bench 4.0 source artifacts."
+        description="Extract and analyze Terminal Bench 4.0 source artifacts."
     )
     parser.add_argument("--work-dir", type=Path, required=True)
     parser.add_argument(

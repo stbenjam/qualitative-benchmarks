@@ -1,9 +1,9 @@
 {
   "schema_version": 3,
-  "generated_at": "2026-09-04T10:54:40.763027+00:00",
+  "generated_at": "2026-09-04T11:29:57.976880+00:00",
   "extracted_at": "2026-09-04T09:46:06.619130+00:00",
   "source_url": "https://hub.harborframework.com/datasets/terminal-bench/terminal-bench/latest?leaderboard=4-0-0&tab=leaderboard",
-  "dataset": "Terminal-Bench 4.0",
+  "dataset": "Terminal Bench 4.0",
   "methodology": {
     "success": "Only associated trials whose live reward is exactly 1.",
     "greenfield": "Final scoped source artifact.",

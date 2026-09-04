@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Five qualitative views of Terminal-Bench solutions</title>
+  <title>The Code They Leave Behind</title>
   <style>
     :root {
       color-scheme: light;
@@ -35,7 +35,7 @@
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body { margin: 0; background: var(--paper); color: var(--ink); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
-    button, select { color: inherit; font: inherit; }
+    button { color: inherit; font: inherit; }
     button { cursor: pointer; }
     .site-header { position: sticky; z-index: 20; top: 0; border-bottom: 1px solid var(--line); background: color-mix(in srgb, var(--paper) 92%, transparent); backdrop-filter: blur(16px); }
     .nav { display: flex; width: min(100% - 40px, 1320px); min-height: 64px; margin: auto; align-items: center; gap: 24px; }
@@ -43,15 +43,14 @@
     .nav-links { display: flex; align-items: center; gap: 18px; }
     .nav-links a { color: var(--muted); font-size: 11px; font-weight: 720; text-decoration: none; }
     .nav-links a:hover { color: var(--teal); }
-    .focus-control { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 10px; }
-    select, .theme { height: 36px; border: 1px solid var(--line); border-radius: 9px; background: var(--card); }
-    select { max-width: 165px; padding: 0 30px 0 10px; }
+    .theme { height: 36px; border: 1px solid var(--line); border-radius: 9px; background: var(--card); }
     .theme { width: 38px; }
     .hero { padding: 86px 20px 82px; border-bottom: 1px solid var(--line); background: radial-gradient(circle at 18% 16%, color-mix(in srgb, var(--purple) 8%, transparent), transparent 29rem), radial-gradient(circle at 83% 8%, color-mix(in srgb, var(--teal) 12%, transparent), transparent 31rem); }
     .hero-inner { width: min(100%, 980px); margin: auto; }
-    h1 { max-width: 900px; margin: 0 0 38px; font-family: Georgia, "Times New Roman", serif; font-size: clamp(46px, 6vw, 76px); line-height: .98; letter-spacing: -.055em; }
-    .post-copy { max-width: 830px; color: var(--ink); font-family: Georgia, "Times New Roman", serif; font-size: clamp(17px, 1.55vw, 20px); line-height: 1.7; }
-    .post-copy p { margin: 0 0 23px; }
+    h1 { max-width: 900px; margin: 0 0 15px; font-family: Georgia, "Times New Roman", serif; font-size: clamp(46px, 6vw, 76px); line-height: .98; letter-spacing: -.055em; }
+    .post-meta { margin: 0 0 32px; color: var(--muted); font-size: 12px; font-weight: 680; letter-spacing: .025em; }
+    .post-copy { max-width: 830px; color: var(--ink); font-family: Georgia, "Times New Roman", serif; font-size: clamp(17px, 1.55vw, 20px); line-height: 1.52; }
+    .post-copy p { margin: 0 0 18px; }
     .post-copy a { color: var(--teal); text-underline-offset: 3px; }
     .facet-list, .takeaway-list { margin: 28px 0 30px; padding: 0; list-style: none; }
     .facet-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; overflow: hidden; border: 1px solid var(--line); border-radius: 14px; background: var(--line); font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
@@ -61,6 +60,19 @@
     .takeaway-list { display: grid; gap: 11px; font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
     .takeaway-list li { position: relative; padding-left: 21px; color: var(--ink); font-size: 14px; font-weight: 680; line-height: 1.45; }
     .takeaway-list li::before { position: absolute; top: .64em; left: 0; width: 7px; height: 7px; border-radius: 50%; background: var(--teal); content: ""; }
+    .task-list { margin: 4px 0 25px; overflow: hidden; border: 1px solid var(--line); border-radius: 14px; background: color-mix(in srgb, var(--card) 82%, transparent); font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
+    .task-list summary { display: flex; padding: 16px 19px; align-items: center; justify-content: space-between; gap: 20px; cursor: pointer; color: var(--ink); font-size: 13px; font-weight: 760; list-style: none; }
+    .task-list summary::-webkit-details-marker { display: none; }
+    .task-list summary::after { color: var(--teal); content: "+"; font-size: 21px; font-weight: 500; line-height: 1; }
+    .task-list[open] summary { border-bottom: 1px solid var(--line); }
+    .task-list[open] summary::after { content: "−"; }
+    .task-groups { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0; }
+    .task-group { padding: 18px 19px 20px; }
+    .task-group + .task-group { border-left: 1px solid var(--line); }
+    .task-group h2 { margin: 0 0 12px; color: var(--muted); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; }
+    .task-group ul { display: grid; gap: 9px; margin: 0; padding: 0; list-style: none; }
+    .task-group li { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; color: var(--ink); font-size: 11px; line-height: 1.35; }
+    .task-group li span:last-child { flex: 0 0 auto; color: var(--muted); font-size: 9px; text-align: right; }
     .graph-section { padding: 70px 20px; scroll-margin-top: 58px; }
     .graph-section:nth-child(even) { background: color-mix(in srgb, var(--card) 38%, transparent); }
     .graph-card { width: min(100%, 1320px); margin: auto; overflow: hidden; border: 1px solid var(--line); border-radius: 20px; background: var(--card); box-shadow: var(--shadow); }
@@ -88,7 +100,6 @@
     svg .leader { stroke: color-mix(in srgb, var(--muted) 45%, transparent); stroke-width: 1; }
     svg .point-label { fill: var(--ink); font-size: 10px; font-weight: 760; }
     svg .model-row { transition: opacity .18s; }
-    .dim { opacity: .13; }
     .graph-note { padding: 13px 30px 17px; border-top: 1px solid var(--line); color: var(--muted); font-size: 9px; line-height: 1.55; }
     .tooltip { position: fixed; z-index: 40; width: max-content; max-width: 290px; padding: 10px 12px; pointer-events: none; border: 1px solid var(--line); border-radius: 9px; background: var(--card); box-shadow: 0 12px 35px rgba(0, 0, 0, .16); color: var(--ink); font-size: 10px; line-height: 1.5; opacity: 0; transform: translate(10px, 10px); transition: opacity .12s; }
     .tooltip.visible { opacity: 1; }
@@ -103,7 +114,6 @@
     body.capture .provider-legend { padding-top: 11px; }
     @media (max-width: 900px) {
       .nav-links { display: none; }
-      .focus-control span { display: none; }
       .graph-head { grid-template-columns: 1fr; }
       .controls { justify-content: flex-start; }
       .chart-frame { overflow-x: auto; }
@@ -111,10 +121,11 @@
     }
     @media (max-width: 560px) {
       .nav { width: min(100% - 20px, 1320px); gap: 8px; }
-      .focus-control { display: none; }
       .hero { padding: 58px 18px 50px; }
       .facet-list { grid-template-columns: 1fr; }
       .facet-list li:last-child { grid-column: auto; }
+      .task-groups { grid-template-columns: 1fr; }
+      .task-group + .task-group { border-top: 1px solid var(--line); border-left: 0; }
       .graph-section { padding: 35px 10px; }
       .graph-head { padding: 21px 18px 17px; }
       .graph-title { font-size: 27px; }
@@ -134,7 +145,6 @@
         <a href="#speciality">Speciality</a>
         <a href="#writing">Writing</a>
       </nav>
-      <label class="focus-control"><span>Highlight</span><select id="modelFocus"><option value="">All models</option></select></label>
       <button class="theme" id="themeToggle" type="button" aria-label="Switch color theme">◐</button>
     </div>
   </header>
@@ -143,8 +153,9 @@
     <section class="hero">
       <div class="hero-inner">
         <h1>The Code They Leave Behind</h1>
+        <p class="post-meta">Stephen Benjamin · September 4, 2026</p>
         <article class="post-copy">
-          <p>I’ve been thinking a lot about what we’re actually trying to measure with coding benchmarks. Almost every major leaderboard evaluates models on a simple binary: did the model complete the task? That pass/fail metric hides the qualitative nuances of the solution. A single score doesn't tell you how the code was built, how fragile it is, or whether you would ever want to maintain it.</p>
+          <p>I’ve been thinking a lot about what we’re actually trying to measure with coding benchmarks. Almost every major leaderboard evaluates models on a simple binary: did the model complete the task? That pass/fail metric hides the qualitative properties of the solution. A single score doesn't tell you how the code was built, how fragile it is, or whether you would ever want to maintain it.</p>
           <p>Opus 5 is a great example of this gap. On paper, it looks like a massive improvement: on Terminal Bench 4.0, Opus 4.8 scored 23.6%, while Opus 5 jumped to 51.8%, surpassing Fable 5. But once developers actually started using it, many called the model practically unusable.</p>
           <p>We see this cycle constantly: a new model lands, benchmarks hit record highs, and real-world utility fails to match the headline.</p>
           <p>One thing I think we are missing is subjective experience with a model. What happens after the task is solved? Does it produce clean, readable code, or does it dump a fragile, tangled mess into your codebase? Does it write clearly, or is reading its rationale a painful slog?</p>
@@ -158,6 +169,10 @@
             <li><strong>Writing</strong>How clearly does it structure its code, comment its work, and explain its reasoning?</li>
           </ul>
           <p>Not every Terminal Bench task can be evaluated this way, but I’ve selected 27 that produce measurable code either greenfield solutions or tasks involving debugging and repair.</p>
+          <details class="task-list">
+            <summary>View the 27 measured tasks</summary>
+            <div class="task-groups" id="taskInventory"></div>
+          </details>
           <p>I’m by no means an expert in this domain, and others will likely find more insightful ways to analyze code quality, but I think it's a discussion worth starting. Feel free to critique or poke holes in what I've done here. I've made the code used to generate these graphs available in a Git repository <a href="https://github.com/stbenjam/qualitative-benchmarks">here</a>.</p>
           <ul class="takeaway-list">
             <li>Fable 5.1 is more reliable in solving the same task</li>
@@ -198,7 +213,7 @@
 
     <section class="graph-section" id="speciality" data-chart="speciality">
       <figure class="graph-card">
-        <figcaption class="graph-head"><div><h2 class="graph-title">Speciality</h2><p class="graph-question">Does the model specialize in specific Terminal-Bench categories?</p></div><div class="controls"><div class="control-group" id="specialityMode"><button class="active" data-value="lift" type="button">Adjusted lift</button><button data-value="raw" type="button">Raw pass rate</button></div></div></figcaption>
+        <figcaption class="graph-head"><div><h2 class="graph-title">Speciality</h2><p class="graph-question">Does the model specialize in specific Terminal Bench categories?</p></div><div class="controls"><div class="control-group" id="specialityMode"><button class="active" data-value="lift" type="button">Adjusted lift</button><button data-value="raw" type="button">Raw pass rate</button></div></div></figcaption>
         <div class="chart-frame" id="specialityChart"></div>
         <div class="graph-note">Adjusted lift compares actual category performance with a simple expectation: model overall rate + cohort category rate − cohort overall rate. It is an exploratory normalization, not a significance test. Raw mode shows the underlying pass rates.</div>
       </figure>
@@ -219,10 +234,10 @@
   <script>
 window.REPORT_DATA = {
   "schema_version": 3,
-  "generated_at": "2026-09-04T10:54:40.763027+00:00",
+  "generated_at": "2026-09-04T11:29:57.976880+00:00",
   "extracted_at": "2026-09-04T09:46:06.619130+00:00",
   "source_url": "https://hub.harborframework.com/datasets/terminal-bench/terminal-bench/latest?leaderboard=4-0-0&tab=leaderboard",
-  "dataset": "Terminal-Bench 4.0",
+  "dataset": "Terminal Bench 4.0",
   "methodology": {
     "success": "Only associated trials whose live reward is exactly 1.",
     "greenfield": "Final scoped source artifact.",
@@ -32423,6 +32438,16 @@ window.REPORT_DATA = {
       const taskRow = (task, model) => task.rows.find(row => row.row_id === model.row_id);
       const tip = value => encodeURIComponent(value);
 
+      const taskInventory = document.querySelector("#taskInventory");
+      taskInventory.innerHTML = [
+        ["greenfield", "Greenfield"],
+        ["repair", "Debugging and repair"]
+      ].map(([category, label]) => {
+        const tasks = data.tasks.filter(task => task.category === category).sort((a, b) => a.title.localeCompare(b.title));
+        const items = tasks.map(task => `<li><span>${task.title}</span><span>${task.language} · ${task.tb_category}</span></li>`).join("");
+        return `<section class="task-group"><h2>${label} · ${tasks.length}</h2><ul>${items}</ul></section>`;
+      }).join("");
+
       const stats = data.models.map(model => {
         const rows = data.tasks.map(task => taskRow(task, model));
         const solved = rows.filter(row => row.successes > 0);
@@ -32451,14 +32476,6 @@ window.REPORT_DATA = {
         legend.innerHTML = providers.map(([name, color]) => `<span><i style="background:${color}"></i>${name}</span>`).join("");
       });
 
-      const focus = document.querySelector("#modelFocus");
-      focus.innerHTML += [...stats].sort((a, b) => modelName(a).localeCompare(modelName(b))).map(model => `<option value="${model.row_id}">${modelName(model)}</option>`).join("");
-      const applyFocus = () => {
-        const selected = focus.value;
-        document.querySelectorAll("[data-model]").forEach(element => element.classList.toggle("dim", selected && element.dataset.model !== selected));
-      };
-      focus.addEventListener("change", applyFocus);
-
       const tooltip = document.querySelector("#tooltip");
       const bindInteractions = root => {
         root.querySelectorAll("[data-tip]").forEach(element => {
@@ -32469,13 +32486,7 @@ window.REPORT_DATA = {
           });
           element.addEventListener("pointermove", moveTooltip);
           element.addEventListener("pointerleave", () => tooltip.classList.remove("visible"));
-          element.addEventListener("click", () => {
-            if (!element.dataset.model) return;
-            focus.value = focus.value === element.dataset.model ? "" : element.dataset.model;
-            applyFocus();
-          });
         });
-        applyFocus();
       };
       function moveTooltip(event) {
         const gap = 16;

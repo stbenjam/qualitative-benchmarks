@@ -1,7 +1,7 @@
 [project]
 name = "qualitative-benchmarks"
 version = "0.1.0"
-description = "Qualitative static analysis of Terminal-Bench solution artifacts"
+description = "Qualitative static analysis of Terminal Bench solution artifacts"
 requires-python = ">=3.12"
 dependencies = [
   "httpx==0.28.1",

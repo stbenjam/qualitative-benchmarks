@@ -1,7 +1,7 @@
-# Qualitative Terminal-Bench metrics
+# Qualitative Terminal Bench metrics
 
 This report measures successful (`reward == 1`) source artifacts associated with
-the public Terminal-Bench 4.0 leaderboard. Its task manifest is intentionally
+the public Terminal Bench 4.0 leaderboard. Its task manifest is intentionally
 hard-coded: each task has reviewed artifact paths, language rules, exclusions,
 and—where applicable—packaged baseline paths.
 
@@ -23,12 +23,12 @@ Subsequent builds reuse valid archives. Pass `--refresh` to refetch public Hub
 metadata and artifacts, `--extract-only` to stop after extraction, or
 `--skip-extract` for an offline rebuild.
 
-`facets.html` loads `data.js` locally. Regenerate the single-file Pages artifact
+`template.html` loads `data.js` locally. Regenerate the single-file Pages artifact
 with:
 
 ```bash
 uv run python inline_report.py \
-  --html facets.html \
+  --html template.html \
   --data data.js \
   --output index.html
 ```
@@ -63,7 +63,7 @@ Rust. It remains null for unsupported languages instead of mixing in a
 different estimator. Model rollups average task-relative indices, where the
 lowest successful model mean on each task is 100.
 
-Each task also carries Terminal-Bench's canonical category, subcategory, and
+Each task also carries Terminal Bench's canonical category, subcategory, and
 tags from its exported `task.toml`. The solve map renders category rollups and
 individual tasks either as successful attempts or as the percentage-point
 difference from the other leaderboard models.
