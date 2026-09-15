@@ -87,6 +87,7 @@
     svg .axis-label { fill: var(--ink); font-size: 11px; font-weight: 720; }
     svg .quadrant { fill: var(--muted); font-size: 10px; font-weight: 700; letter-spacing: .02em; }
     svg .median { stroke: color-mix(in srgb, var(--muted) 45%, transparent); stroke-width: 1; stroke-dasharray: 6 7; }
+    svg .effort-line { fill: none; stroke-width: 2.2; stroke-opacity: .38; stroke-linecap: round; stroke-linejoin: round; }
     svg .mark { cursor: pointer; stroke: var(--card); stroke-width: 3; transition: opacity .18s, r .18s; }
     svg .mark:hover { stroke: var(--ink); stroke-width: 2; }
     svg .leader { stroke: color-mix(in srgb, var(--muted) 45%, transparent); stroke-width: 1; }
@@ -369,10 +370,22 @@
         const plotted = points.map(point => ({ ...point, px: axis.sx(point.x), py: axis.sy(point.y) }));
         const labels = labelLayout(plotted);
         const extra = options.extra ? options.extra({ ...axis, xDomain: domain.x, yDomain: domain.y, plotted }) : "";
+        const effortOrder = { low: 0, medium: 1, high: 2, xhigh: 3, max: 4 };
+        const modelSeries = new Map();
+        plotted.forEach(point => {
+          const series = modelSeries.get(point.model.model) || [];
+          series.push(point);
+          modelSeries.set(point.model.model, series);
+        });
+        const effortLines = [...modelSeries.values()].filter(series => series.length > 1).map(series => {
+          series.sort((a, b) => (effortOrder[a.model.reasoning_effort] ?? 99) - (effortOrder[b.model.reasoning_effort] ?? 99));
+          const coordinates = series.map(point => `${point.px},${point.py}`).join(" ");
+          return `<polyline class="effort-line" points="${coordinates}" stroke="${colorMap[series[0].model.provider]}"/>`;
+        }).join("");
         const leaders = labels.map(label => `<line class="leader label-group" data-model="${label.point.model.row_id}" x1="${label.point.px}" y1="${label.point.py}" x2="${label.leftSide ? label.x + label.width + 3 : label.x - 3}" y2="${label.y - 3}"/>`).join("");
         const marks = plotted.map(point => `<circle class="mark" data-model="${point.model.row_id}" data-tip="${tip(point.tip)}" cx="${point.px}" cy="${point.py}" r="7.5" fill="${colorMap[point.model.provider]}"/>`).join("");
         const texts = labels.map(label => `<text class="point-label label-group" data-model="${label.point.model.row_id}" x="${label.x}" y="${label.y}" data-tip="${tip(label.point.tip)}">${modelName(label.point.model)}</text>`).join("");
-        return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${options.ariaLabel}">${axis.markup}${extra}${leaders}${marks}${texts}</svg>`;
+        return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${options.ariaLabel}">${axis.markup}${extra}${effortLines}${leaders}${marks}${texts}</svg>`;
       }
       function regression(points) {
         const mx = avg(points.map(point => point.x)), my = avg(points.map(point => point.y));
