@@ -5,6 +5,10 @@ the public Terminal Bench 4.0 leaderboard. Its task manifest is intentionally
 hard-coded: each task has reviewed artifact paths, language rules, exclusions,
 and—where applicable—packaged baseline paths.
 
+The report currently includes GPT-6 Astra at `max` reasoning effort only. The
+other Astra effort levels remain intentionally excluded by
+`MODEL_EFFORT_FILTERS` in `build_report.py`.
+
 ## Build
 
 Install the Harbor CLI, then use a work directory with several gigabytes free.

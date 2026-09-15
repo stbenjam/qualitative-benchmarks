@@ -35,6 +35,7 @@ DATASET = "terminal-bench/terminal-bench"
 DATASET_VERSION = "latest"
 LEADERBOARD = "4-0-0"
 PAGE_SIZE = 1000
+MODEL_EFFORT_FILTERS = {"GPT-6 Astra": frozenset({"max"})}
 COMMENT_WORD = re.compile(r"\b[\w'-]+\b")
 PROSE_WORD = re.compile(r"[A-Za-z]+(?:['’][A-Za-z]+)?")
 PROSE_SENTENCE_END = re.compile(r"[.!?]+(?:[\"')\]]+)?(?=\s|$)")
@@ -948,6 +949,20 @@ def _hub_trial_url(row_id: str, job_id: str, trial_id: str) -> str:
     )
 
 
+def _model_effort_exclusion_reason(row: dict[str, Any]) -> str | None:
+    metadata = row.get("metadata") or {}
+    model_display = metadata.get("model_display") or {}
+    model_label = model_display.get("label")
+    allowed_efforts = MODEL_EFFORT_FILTERS.get(model_label)
+    if allowed_efforts is None:
+        return None
+    reasoning_effort = metadata.get("reasoning_effort")
+    if reasoning_effort in allowed_efforts:
+        return None
+    efforts = ", ".join(sorted(allowed_efforts))
+    return f"Only reasoning effort {efforts} is included in this analysis."
+
+
 async def _request_with_retries(
     client: httpx.AsyncClient,
     method: str,
@@ -1113,9 +1128,14 @@ async def extract(work_dir: Path, *, refresh: bool, concurrency: int) -> Path:
         }
         metadata_path = work_dir / "trials.json"
         metadata_path.write_text(json.dumps(snapshot, indent=2) + "\n")
+        included_row_ids = {
+            str(row["id"])
+            for row in rows
+            if _model_effort_exclusion_reason(row) is None
+        }
         await _download_archives(
             client,
-            selected,
+            [item for item in selected if str(item["row_id"]) in included_row_ids],
             work_dir / "archives",
             refresh=refresh,
             concurrency=concurrency,
@@ -1345,9 +1365,15 @@ def build_report(work_dir: Path, complexity_binary: Path) -> dict[str, Any]:
         )
 
     task_names = {spec.task_name for spec in TASKS}
-    artifact_unavailable_row_ids: set[str] = set()
+    unavailable_reasons = {
+        str(row["id"]): reason
+        for row in all_rows
+        if (reason := _model_effort_exclusion_reason(row)) is not None
+    }
     for row in all_rows:
         row_id = str(row["id"])
+        if row_id in unavailable_reasons:
+            continue
         successful = next(
             (
                 association
@@ -1362,10 +1388,10 @@ def build_report(work_dir: Path, complexity_binary: Path) -> dict[str, Any]:
             continue
         trial_id = str(successful["trial_id"])
         if not _archive_exports_artifacts(work_dir / "archives" / f"{trial_id}.tar.gz"):
-            artifact_unavailable_row_ids.add(row_id)
-    rows = [
-        row for row in all_rows if str(row["id"]) not in artifact_unavailable_row_ids
-    ]
+            unavailable_reasons[row_id] = (
+                "Trial archives do not export solution artifacts."
+            )
+    rows = [row for row in all_rows if str(row["id"]) not in unavailable_reasons]
 
     snapshot_root = work_dir / "snapshots"
     baseline_snapshot_paths: dict[str, dict[str, str]] = {}
@@ -1651,7 +1677,7 @@ def build_report(work_dir: Path, complexity_binary: Path) -> dict[str, Any]:
     unavailable_models = []
     for leaderboard_row in all_rows:
         row_id = str(leaderboard_row["id"])
-        if row_id not in artifact_unavailable_row_ids:
+        if row_id not in unavailable_reasons:
             continue
         leaderboard_metrics = leaderboard_row.get("metrics") or {}
         unavailable_models.append(
@@ -1662,7 +1688,7 @@ def build_report(work_dir: Path, complexity_binary: Path) -> dict[str, Any]:
                 "leaderboard_pass_at_5": leaderboard_metrics.get("pass_at_5"),
                 "leaderboard_successes": leaderboard_metrics.get("successes"),
                 "leaderboard_attempts": leaderboard_metrics.get("n_trials"),
-                "unavailable_reason": "Trial archives do not export solution artifacts.",
+                "unavailable_reason": unavailable_reasons[row_id],
             }
         )
 
